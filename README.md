@@ -14,5 +14,5 @@ Cairo, with a live-updating position, address and distance. No logos or brand ma
 - Director panel: triple-tap the sheet handle. Controls speed, position, update interval,
   the wife's location, device name, owner name, battery and the fake status bar.
 
-To serve it from GitHub Pages: repository Settings → Pages → Source "Deploy from a branch",
-branch `claude/eloquent-cannon-hhr90y` (or `main` after merging), folder `/docs`.
+Published with GitHub Pages from the `gh-pages` branch, which holds a copy of `docs/`:
+https://oudoo.github.io/OudoFigma/ — to publish an update, copy `docs/` onto `gh-pages` and push.
