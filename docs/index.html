@@ -140,6 +140,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 #dir .foot{color:#8e8e93;font-size:12px;margin-top:10px;line-height:1.4}
 #toast{position:absolute;left:50%;top:calc(var(--top) + 60px);transform:translateX(-50%);background:rgba(20,20,22,.88);color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;font-weight:600;z-index:90;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap}
 #toast.show{opacity:1}
+@media (min-width:600px){body{background:#2a2a2d;display:flex;align-items:center;justify-content:center}#app{position:relative;inset:auto;width:393px;height:min(852px,100%);border-radius:44px;box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 0 10px #111,0 0 0 12px #3a3a3c}}
 #err{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;color:#1c1c1e;font-size:16px;z-index:200;background:#f1ebdd}
 </style>
 
@@ -437,13 +438,15 @@ setInterval(function(){ refreshTexts(); }, 15000);
 
 /* ---------------- map view ---------------- */
 var canvas = $('map'), ctx = canvas.getContext('2d');
-var view = { cx: 0, cy: 0, z: 10 }, W = 0, H = 0, DPR = 1, dirty = true;
+var view = { cx: 0, cy: 0, z: 10 }, W = 0, H = 0, DPR = 1, dirty = true, appEl = $('app'), appRect = { left: 0, top: 0 };
+function lx(e){ return e.clientX - appRect.left; }
+function ly(e){ return e.clientY - appRect.top; }
 function scaleOf(z){ return Math.pow(2, z - 16); }
 function toScreen(x, y){ var s = scaleOf(view.z); return [(x - view.cx) * s + W / 2, (y - view.cy) * s + H / 2]; }
 function toUnits(sx, sy){ var s = scaleOf(view.z); return [view.cx + (sx - W / 2) / s, view.cy + (sy - H / 2) / s]; }
 function resize(){
-  var vv = window.visualViewport;
-  W = Math.round(vv ? vv.width : window.innerWidth); H = Math.round(vv ? vv.height : window.innerHeight);
+  var r = appEl.getBoundingClientRect(); appRect = { left: r.left, top: r.top };
+  W = Math.round(r.width); H = Math.round(r.height);
   DPR = Math.min(3, window.devicePixelRatio || 1);
   canvas.width = W * DPR; canvas.height = H * DPR; canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   layoutSheet(); dirty = true;
@@ -494,6 +497,13 @@ function render(){
   ctx.lineJoin = 'round'; ctx.lineCap = 'round';
   // delta farmland
   ctx.fillStyle = C.delta; ctx.beginPath(); ctx.moveTo(DELTA[0][0], DELTA[0][1]); for(var i = 1; i < DELTA.length; i++) ctx.lineTo(DELTA[i][0], DELTA[i][1]); ctx.closePath(); ctx.fill();
+  // built-up tint derived from street density
+  if(D.urban && D.urban.c.length){
+    var uc = D.urban.c, ur = D.urban.cell * 0.78, m0 = ux0 - ur, m1 = ux1 + ur, n0 = uy0 - ur, n1 = uy1 + ur;
+    ctx.fillStyle = C.urban; ctx.beginPath();
+    for(var ui = 0; ui < uc.length; ui += 2){ var ux = uc[ui], uy = uc[ui + 1]; if(ux < m0 || ux > m1 || uy < n0 || uy > n1) continue; ctx.moveTo(ux + ur, uy); ctx.arc(ux, uy, ur, 0, 6.2832); }
+    ctx.fill();
+  }
   // areas
   var minPx = 2.5 / s;
   var areas = collect(L.areas, ux0, uy0, ux1, uy1, frameStamp, function(f){ return f.size > minPx && (z >= 9.5 || f.cls === 21) && (z >= 11.5 || f.cls === 21 || f.cls === 26 || f.cls === 22); });
@@ -604,7 +614,7 @@ function drawLabels(z, ux0, uy0, ux1, uy1, roads, water){
       if(bA < 0 || bestLen < w3) continue;
       var mx = (pts[2 * bA] + pts[2 * bB]) / 2, my = (pts[2 * bA + 1] + pts[2 * bB + 1]) / 2; var sc2 = toScreen(mx, my);
       if(sc2[0] < 0 || sc2[0] > W || sc2[1] < 0 || sc2[1] > H) continue;
-      var key = f.name + '|' + Math.round(sc2[0] / 220) + '|' + Math.round(sc2[1] / 220); if(seen[key]) continue;
+      var key = f.name + '|' + Math.round(sc2[0] / 520) + '|' + Math.round(sc2[1] / 520); if(seen[key]) continue;
       var ang = Math.atan2(pts[2 * bB + 1] - pts[2 * bA + 1], pts[2 * bB] - pts[2 * bA]); if(ang > Math.PI / 2) ang -= Math.PI; if(ang < -Math.PI / 2) ang += Math.PI;
       var rad = w3 / 2; if(!free(sc2[0] - rad, sc2[1] - 8, sc2[0] + rad, sc2[1] + 8)) continue;
       placed.push([sc2[0] - rad, sc2[1] - 8, sc2[0] + rad, sc2[1] + 8]); seen[key] = 1; count++;
@@ -641,7 +651,7 @@ function centerOnMe(){ var z = Math.max(view.z, 14); var s = scaleOf(z); flyTo(m
 var stage = $('stage'), ptrs = new Map(), lastPan = null, lastTap = 0, vel = [0, 0], lastMove = 0, moved = false;
 stage.addEventListener('pointerdown', function(e){
   if(e.target.closest && e.target.closest('.pin')) return;
-  stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY });
+  stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: lx(e), y: ly(e), sx: lx(e), sy: ly(e) });
   anim = null; vel = [0, 0]; moved = false; stage.classList.add('drag');
   if(ptrs.size === 2){ var p = Array.from(ptrs.values()); pinch = { d: dist2(p[0], p[1]), mid: [(p[0].x + p[1].x) / 2, (p[0].y + p[1].y) / 2], z: view.z, cx: view.cx, cy: view.cy }; }
 });
@@ -649,7 +659,7 @@ var pinch = null;
 function dist2(a, b){ var dx = a.x - b.x, dy = a.y - b.y; return Math.sqrt(dx * dx + dy * dy); }
 stage.addEventListener('pointermove', function(e){
   var p = ptrs.get(e.pointerId); if(!p) return;
-  var px = p.x, py = p.y; p.x = e.clientX; p.y = e.clientY;
+  var px = p.x, py = p.y; p.x = lx(e); p.y = ly(e);
   if(Math.abs(p.x - p.sx) > 6 || Math.abs(p.y - p.sy) > 6) moved = true;
   if(ptrs.size === 1){
     var s = scaleOf(view.z), dx = p.x - px, dy = p.y - py;
@@ -671,13 +681,13 @@ function endPtr(e){
   pinch = null;
   if(!moved){
     var now = performance.now();
-    if(now - lastTap < 320){ lastTap = 0; var u = toUnits(e.clientX, e.clientY); var s1 = scaleOf(view.z + 1); flyTo(u[0] - (e.clientX - W / 2) / s1, u[1] - (e.clientY - H / 2) / s1, view.z + 1, 320); }
+    if(now - lastTap < 320){ lastTap = 0; var u = toUnits(lx(e), ly(e)); var s1 = scaleOf(view.z + 1); flyTo(u[0] - (lx(e) - W / 2) / s1, u[1] - (ly(e) - H / 2) / s1, view.z + 1, 320); }
     else lastTap = now;
   } else if(performance.now() - lastMove < 60){ momentum = [vel[0], vel[1]]; }
 }
 var momentum = null;
 stage.addEventListener('pointerup', endPtr); stage.addEventListener('pointercancel', endPtr);
-stage.addEventListener('wheel', function(e){ e.preventDefault(); var u = toUnits(e.clientX, e.clientY); var z = Math.max(ZMIN, Math.min(ZMAX, view.z - e.deltaY * 0.0022)); var s1 = scaleOf(z); view.z = z; view.cx = u[0] - (e.clientX - W / 2) / s1; view.cy = u[1] - (e.clientY - H / 2) / s1; dirty = true; userMovedMap(); }, { passive: false });
+stage.addEventListener('wheel', function(e){ e.preventDefault(); var u = toUnits(lx(e), ly(e)); var z = Math.max(ZMIN, Math.min(ZMAX, view.z - e.deltaY * 0.0022)); var s1 = scaleOf(z); view.z = z; view.cx = u[0] - (lx(e) - W / 2) / s1; view.cy = u[1] - (ly(e) - H / 2) / s1; dirty = true; userMovedMap(); }, { passive: false });
 document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, { passive: false });
 document.addEventListener('touchmove', function(e){ if(e.touches.length > 1) e.preventDefault(); }, { passive: false });
 function userMovedMap(){ if(sim.follow){ sim.follow = false; $('dFollow').textContent = 'Follow: off'; } }
