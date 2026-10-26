@@ -22,7 +22,7 @@
   --blue:#0a7aff; --red:#ff3b30; --green:#34c759;
   --sheet:rgba(249,249,249,.94); --card:#ffffff; --fill:#eeeef0; --fill2:#e5e5ea;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
-  --sb:54px; --tab:83px; --radius:14px;
+  --tab:83px; --radius:14px;
   color-scheme:light;
 }
 html,body{height:100%;margin:0;padding:0;overflow:hidden;overscroll-behavior:none}
@@ -47,10 +47,6 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .dev .lbl{position:absolute;left:50%;top:24px;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:600;color:#1c1c1e;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 4px #fff,0 1px 2px #fff;letter-spacing:-.1px}
 .dev.sel .lbl{top:28px}
 @media (prefers-reduced-motion:reduce){.dev.live .ring{animation:none}}
-/* status bar (only when not running as a home-screen app) */
-#sb{position:absolute;left:0;right:0;top:0;height:var(--sb);display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 10px 34px;box-sizing:border-box;pointer-events:none;z-index:30;font-weight:600;font-size:16px;letter-spacing:-.2px;color:#000}
-#sb .r{display:flex;align-items:center;gap:6px}
-#sb svg{display:block}
 /* top-right map buttons */
 #mapbtns{position:absolute;right:12px;top:calc(var(--top) + 10px);display:flex;flex-direction:column;gap:10px;z-index:20}
 .mbtn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 3px rgba(0,0,0,.18),0 0 0 .5px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;border:0;padding:0;cursor:pointer}
@@ -120,8 +116,6 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:2px 0 0;cursor:pointer;color:#8e8e93;font-family:inherit;font-size:10px;font-weight:500}
 .tab svg{width:30px;height:28px;fill:currentColor}
 .tab.on{color:var(--blue)}
-/* home indicator (only with the fake status bar) */
-#home{position:absolute;left:50%;bottom:8px;width:139px;height:5px;border-radius:3px;background:#000;transform:translateX(-50%);z-index:41;pointer-events:none}
 /* director panel */
 #dir{position:absolute;left:0;right:0;bottom:0;max-height:92%;overflow:auto;background:#141416;color:#f2f2f7;z-index:100;padding:14px 16px 24px;box-sizing:border-box;font-size:14px;border-radius:16px 16px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.5);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 #dir[hidden]{display:none}
@@ -152,12 +146,6 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
       <div class="mk dev live" id="mkDev"><div class="pin"><div class="ring"></div><div class="disc"><svg viewBox="0 0 24 24"><path d="M7 1.5h10A2.5 2.5 0 0 1 19.5 4v16a2.5 2.5 0 0 1-2.5 2.5H7A2.5 2.5 0 0 1 4.5 20V4A2.5 2.5 0 0 1 7 1.5Zm0 2A.5.5 0 0 0 6.5 4v16c0 .28.22.5.5.5h10a.5.5 0 0 0 .5-.5V4a.5.5 0 0 0-.5-.5h-1.1a.9.9 0 0 1-.9.9h-6a.9.9 0 0 1-.9-.9H7Z"/></svg></div><div class="lbl" id="devLbl">iPhone Jad</div></div></div>
     </div>
   </div>
-
-  <div id="sb"><span id="sbTime">13:42</span><span class="r">
-    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
-    <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.6a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2Zm-3.3-3.6a4.7 4.7 0 0 1 6.6 0l1.3-1.3a6.5 6.5 0 0 0-9.2 0l1.3 1.3ZM2.6 5.3a8.4 8.4 0 0 1 11.8 0l1.3-1.3a10.2 10.2 0 0 0-14.4 0l1.3 1.3ZM.3 2.6a11.6 11.6 0 0 1 16.4 0L18 1.3A13.4 13.4 0 0 0-1 1.3l1.3 1.3Z"/></svg>
-    <svg width="28" height="13" viewBox="0 0 28 13"><rect x=".5" y=".5" width="24" height="12" rx="3.5" fill="none" stroke="#000" stroke-opacity=".4"/><rect x="2" y="2" width="21" height="9" rx="2" fill="#000"/><path d="M26 4.5v4a2 2 0 0 0 0-4Z" fill="#000" fill-opacity=".4"/></svg>
-  </span></div>
 
   <div id="mapbtns">
     <button class="mbtn" id="btnLoc" aria-label="Current location"><svg viewBox="0 0 24 24"><path d="M21.4 2.6a1 1 0 0 1 .2 1.1l-7.6 17.5a1 1 0 0 1-1.9-.2l-1.5-7.1-7.1-1.5a1 1 0 0 1-.2-1.9L20.3 2.4a1 1 0 0 1 1.1.2Z"/></svg></button>
@@ -249,7 +237,6 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
     <button class="tab" data-tab="vItems"><svg viewBox="0 0 30 28"><path d="M15 3a6 6 0 0 1 6 6v1.5h1.6a2 2 0 0 1 2 2.2l-1 10.5a2.6 2.6 0 0 1-2.6 2.3h-12a2.6 2.6 0 0 1-2.6-2.3l-1-10.5a2 2 0 0 1 2-2.2H9V9a6 6 0 0 1 6-6Zm0 2.2A3.8 3.8 0 0 0 11.2 9v1.5h7.6V9A3.8 3.8 0 0 0 15 5.2Z"/></svg>Items</button>
     <button class="tab" data-tab="vMe"><svg viewBox="0 0 30 28"><path d="M15 2.5a11.5 11.5 0 1 1 0 23 11.5 11.5 0 0 1 0-23Zm0 2a9.5 9.5 0 0 0-7 15.9c1.4-2 4-3.4 7-3.4s5.6 1.4 7 3.4A9.5 9.5 0 0 0 15 4.5Zm0 3.2a3.9 3.9 0 1 1 0 7.8 3.9 3.9 0 0 1 0-7.8Z"/></svg>Me</button>
   </div>
-  <div id="home" hidden></div>
   <div id="toast"></div>
 
   <div id="dir" hidden>
@@ -260,7 +247,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
     <div class="drow"><label>Jump to</label><span class="chips"><button data-jump="0">Alexandria start</button><button data-jump="6.2">Desert Rd entry</button><button data-jump="60">60 km out</button><button data-jump="110">Midway</button><button data-jump="185">Near Cairo</button><button data-jump="221">Arrived</button></span></div>
     <div class="drow"><label>Updates every</label><select id="dInt"><option value="1">1 s</option><option value="2" selected>2 s</option><option value="3">3 s</option><option value="5">5 s</option><option value="10">10 s</option></select><label>Her location</label><select id="dMe"><option value="zamalek">Zamalek</option><option value="heliopolis">Heliopolis</option><option value="maadi">Maadi</option><option value="nasr">Nasr City</option><option value="zayed">Sheikh Zayed</option><option value="newcairo">New Cairo</option><option value="dokki">Dokki</option></select></div>
     <div class="drow"><label>Device name</label><input type="text" id="dName" value="iPhone Jad"><label>Owner</label><input type="text" id="dOwner" value="Jad" style="min-width:80px"></div>
-    <div class="drow"><label>Battery %</label><input type="range" id="dBatt" min="1" max="100" value="64"><span class="val" id="dBattV">64%</span><button id="dSb">Status bar: auto</button></div>
+    <div class="drow"><label>Battery %</label><input type="range" id="dBatt" min="1" max="100" value="64"><span class="val" id="dBattV">64%</span></div>
     <div class="foot">Speed is a multiplier on real driving speed (about 30 km/h in the city, 110 km/h on the desert road). Dragging the map stops following; tap the device or the arrow button to follow again. Keyboard: space play/pause, [ ] speed, ← → position, D panel.</div>
   </div>
   <div id="err"></div>
@@ -772,19 +759,8 @@ $('btnShare').addEventListener('click', function(){ toast('Location sharing is o
 var toastT = null;
 function toast(msg){ var t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('show'); }, 2200); }
 
-/* ---------------- status bar ---------------- */
-var standalone = (window.navigator.standalone === true) || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-var sbMode = 'auto';
-function applySb(){
-  var show = sbMode === 'on' || (sbMode === 'auto' && !standalone);
-  $('sb').hidden = !show; $('home').hidden = !show;
-  var top = show ? 54 : 0;
-  document.documentElement.style.setProperty('--top', 'max(' + top + 'px, env(safe-area-inset-top, 0px))');
-  $('dSb').textContent = 'Status bar: ' + sbMode;
-  layoutSheet();
-}
-function tick(){ var d = new Date(); $('sbTime').textContent = d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes(); }
-setInterval(tick, 5000); tick();
+/* ---------------- top inset: the phone's real status bar only ---------------- */
+document.documentElement.style.setProperty('--top', 'env(safe-area-inset-top, 0px)');
 
 /* ---------------- director panel ---------------- */
 var dPosDragging = false;
@@ -807,7 +783,6 @@ $('dMe').addEventListener('change', function(){ meKey = this.value; me = proj(ME
 $('dName').addEventListener('input', function(){ var n = this.value || 'iPhone'; ['devName1', 'devName2', 'devLbl'].forEach(function(id){ $(id).textContent = n; }); save(); });
 $('dOwner').addEventListener('input', function(){ $('famName').textContent = this.value || ' '; save(); });
 $('dBatt').addEventListener('input', function(){ setBattery(+this.value); save(); });
-$('dSb').addEventListener('click', function(){ sbMode = sbMode === 'auto' ? 'on' : sbMode === 'on' ? 'off' : 'auto'; applySb(); save(); });
 document.addEventListener('keydown', function(e){
   if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
   if(e.key === ' '){ e.preventDefault(); $('dPlay').click(); }
@@ -817,11 +792,11 @@ document.addEventListener('keydown', function(e){
   else if(e.key === 'ArrowRight'){ sim.m = Math.min(ROUTE_LEN, sim.m + 2000); locationUpdate(true); }
   else if(e.key === 'ArrowLeft'){ sim.m = Math.max(0, sim.m - 2000); locationUpdate(true); }
 });
-function save(){ try{ localStorage.setItem('prop-settings', JSON.stringify({ mult: sim.mult, interval: sim.interval, me: meKey, name: $('dName').value, owner: $('dOwner').value, batt: sim.batt, sb: sbMode })); }catch(err){} }
+function save(){ try{ localStorage.setItem('prop-settings', JSON.stringify({ mult: sim.mult, interval: sim.interval, me: meKey, name: $('dName').value, owner: $('dOwner').value, batt: sim.batt })); }catch(err){} }
 function load(){
   try{ var s = JSON.parse(localStorage.getItem('prop-settings') || 'null'); if(!s) return;
     if(s.mult) sim.mult = s.mult; if(s.interval) sim.interval = s.interval; if(s.me && ME[s.me]) meKey = s.me;
-    if(s.name){ $('dName').value = s.name; } if(s.owner){ $('dOwner').value = s.owner; } if(s.batt) sim.batt = s.batt; if(s.sb) sbMode = s.sb;
+    if(s.name){ $('dName').value = s.name; } if(s.owner){ $('dOwner').value = s.owner; } if(s.batt) sim.batt = s.batt;
   }catch(err){}
 }
 
@@ -847,7 +822,7 @@ var nm = $('dName').value || 'iPhone Jad'; ['devName1', 'devName2', 'devLbl'].fo
 $('dSpeed').value = sliderFromMult(sim.mult); updSpeedLbl(); $('dInt').value = String(sim.interval / 1000); $('dBatt').value = sim.batt; setBattery(sim.batt);
 // inject home-screen app meta tags when the page is not already a standalone document
 ['apple-mobile-web-app-capable|yes', 'mobile-web-app-capable|yes', 'apple-mobile-web-app-status-bar-style|black-translucent', 'apple-mobile-web-app-title|Locate'].forEach(function(s){ var p = s.split('|'); if(!document.querySelector('meta[name="' + p[0] + '"]')){ var m = document.createElement('meta'); m.name = p[0]; m.content = p[1]; document.head.appendChild(m); } });
-resize(); applySb();
+resize(); layoutSheet();
 var p0 = posAt(0); shown.x = shown.toX = shown.fromX = p0.x; shown.y = shown.toY = shown.fromY = p0.y;
 locationUpdate(true);
 lastLoc = performance.now();

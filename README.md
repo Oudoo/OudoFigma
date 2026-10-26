@@ -12,7 +12,7 @@ Cairo, with a live-updating position, address and distance. No logos or brand ma
   and launch it from the home screen so it runs full screen with the real status bar.
 - `docs/data.js` — map geometry built from OpenStreetMap data (© OpenStreetMap contributors, ODbL).
 - Director panel: triple-tap the sheet handle. Controls speed, position, update interval,
-  the wife's location, device name, owner name, battery and the fake status bar.
+  the wife's location, device name, owner name and battery.
 
 Published with GitHub Pages from the `gh-pages` branch, which holds a copy of `docs/`:
 https://oudoo.github.io/OudoFigma/ — to publish an update, copy `docs/` onto `gh-pages` and push.
